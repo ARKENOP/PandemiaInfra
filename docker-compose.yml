@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+
+  pandemia-api:
+    build:
+      context: https://github.com/misterwhite44/PandemiAPI.git
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  pandemia-ia:
+    build:
+      context: https://github.com/tboutroux/pandemia-api-ia.git
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  pandemia-front:
+    build:
+      context: https://github.com/misterwhite44/pandemia-front.git
+    ports:
+      - "3000:3000"
+    depends_on:
+      - pandemia-api
+      - pandemia-ia
+
+  etl-job:
+    build:
+      context: https://github.com/misterwhite44/ELT-MSPR.git
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pandemia
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
