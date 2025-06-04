@@ -21,6 +21,8 @@ services:
   pandemia-front:
     build:
       context: https://github.com/misterwhite44/pandemia-front.git
+      args:
+        REACT_APP_API_KEY: ${REACT_APP_API_KEY}
     ports:
       - "3000:3000"
     depends_on:
